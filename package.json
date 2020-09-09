@@ -10,7 +10,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "nuxt": "^2.14.0"
+    "nuxt": "^2.14.0",
+    "nuxt-leaflet": "0.0.21"
   },
   "devDependencies": {
     "@nuxtjs/style-resources": "^1.0.0",

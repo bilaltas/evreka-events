@@ -99,7 +99,21 @@
 								v-if="activeTab == 'location'"
 							>
 
-								{{selectedEvent.location}}
+								<div
+									id="map-wrap"
+									style="height: 500px"
+								>
+									<client-only>
+										<l-map
+											:zoom=18
+											:center="[selectedEvent.location.latitude, selectedEvent.location.longitude]"
+										>
+											<l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png">ASD</l-tile-layer>
+											<l-marker :lat-lng="[selectedEvent.location.latitude, selectedEvent.location.longitude]"></l-marker>
+										</l-map>
+									</client-only>
+								</div>
+
 								<p v-if="selectedEvent.location == {}">There is no map information.</p>
 
 							</div>
