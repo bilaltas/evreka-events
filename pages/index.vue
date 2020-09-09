@@ -207,8 +207,8 @@
 
 							<span
 								class="choice"
-								:class="{selected : selectedAction == 'mark-resolved'}"
-								@click="switchAction('mark-resolved')"
+								:class="{selected : selectedAction == 'Resolved'}"
+								@click="switchAction('Resolved')"
 							>
 								<p class="title">Mark as Resolved</p>
 								<p class="desctription">Mark this event as resolved and enter the details of the resolution.</p>
@@ -216,8 +216,8 @@
 
 							<span
 								class="choice"
-								:class="{selected : selectedAction == 'change-asset'}"
-								@click="switchAction('change-asset')"
+								:class="{selected : selectedAction == 'Change Asset'}"
+								@click="switchAction('Change Asset')"
 							>
 								<p class="title">Change Asset</p>
 								<p class="desctription">Change the asset with another one.</p>
@@ -459,6 +459,10 @@
 					setTimeout(() => {
 
 						this.openPopup(this.currentChar > 0 ? 'action-taken' : 'action-error');
+
+						if (this.currentChar > 0) {
+							this.editAction(this.selectedEventID, this.selectedAction);
+						}
 
 					}, 1000);
 
