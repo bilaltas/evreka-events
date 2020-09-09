@@ -52,15 +52,8 @@ export default {
 	** Nuxt.js modules
 	*/
 	modules: [
-		// Doc: https://axios.nuxtjs.org/usage
-		"@nuxtjs/style-resources",
-		'@nuxtjs/axios',
+		"@nuxtjs/style-resources"
 	],
-	/*
-	** Axios module configuration
-	** See https://axios.nuxtjs.org/options
-	*/
-	axios: {},
 	/*
 	** Build configuration
 	** See https://nuxtjs.org/api/configuration-build/
