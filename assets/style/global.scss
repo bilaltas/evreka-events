@@ -29,20 +29,20 @@ img {
 
 
 // Titles
-h1 {
+h1, .h1-size {
 	font-size: 23px;
 	line-height: 32px;
 	font-weight: 700;
 	text-transform: uppercase;
 }
 
-h2 {
+h2, .h2-size {
 	font-size: 21pt;
 	line-height: normal;
 	font-weight: 300;
 }
 
-h3 {
+h3, .h3-size {
 	font-size: 21pt;
 	line-height: normal;
 	font-weight: 700;
@@ -79,9 +79,31 @@ button {
 	}
 }
 
+// Textarea
+textarea {
+	display: block;
+	width: 100%;
+	min-height: 150px;
+	border-radius: 6px;
+	border: 0.5px solid #596680;
+	padding: 17px;
+	font-family: 'Open Sans', sans-serif;
+
+	&::placeholder {
+		color: $dark-gray;
+		opacity: 0.3;
+	}
+}
+
+[disabled] {
+	opacity: 0.5 !important;
+	cursor: not-allowed;
+}
+
 
 // Tabs
 .tabs {
+	width: 100%;
 
 	& > .tab-titles {
 		display: flex;
@@ -99,10 +121,6 @@ button {
 			margin-bottom: -3px;
 			cursor: pointer;
 
-			&:hover {
-				opacity: 0.7;
-			}
-
 			&.active {
 				opacity: 1;
 				border-bottom-color: $green;
@@ -114,4 +132,26 @@ button {
 		padding-top: 20px;
 	}
 
+}
+
+
+.text {
+
+	&-center {
+		text-align: center;
+	}
+
+}
+
+
+// Animations
+.spin {
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	} to {
+		transform: rotate(360deg);
+	}
 }

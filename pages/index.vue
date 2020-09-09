@@ -1,5 +1,6 @@
 <template>
 	<div class="events-wrapper">
+
 		<div class="events-list">
 
 			<div class="topbar">
@@ -46,6 +47,7 @@
 			</div>
 
 		</div>
+
 		<div class="event-details">
 
 			<div class="topbar">
@@ -61,7 +63,10 @@
 						v-if="getColumnValue('Aksiyon', selectedEvent) != 'Aksiyon Gerekmiyor'"
 					>
 						<button @click="editAction(selectedEvent.id, 'Aksiyon Gerekmiyor')">No Action Needed</button>
-						<button class="green">Take Action</button>
+						<button
+							class="green"
+							@click="openPopup('takeaction')"
+						>Take Action</button>
 					</div>
 
 					<div class="tabs">
@@ -165,6 +170,201 @@
 			</div>
 
 		</div>
+
+		<div
+			id="popups"
+			v-if="activePopup"
+		>
+			<div
+				class="popup take-action"
+				v-if="activePopup == 'takeaction'"
+			>
+
+				<span
+					class="close-button"
+					@click="closePopups()"
+				>
+					<img
+						src="/times.svg"
+						alt=""
+					>
+				</span>
+
+				<div class="tabs">
+					<div class="tab-titles">
+						<span
+							:class="{active: activeActionTab == 'selectaction'}"
+							@click="switchActionTab('selectaction')"
+						><span class="number">1</span> Select Action</span>
+						<span :class="{active: activeActionTab == 'takeaction'}"><span class="number">2</span> Take Action</span>
+					</div>
+					<div class="tab-contents">
+
+						<div
+							class="tab-content selectaction"
+							v-if="activeActionTab == 'selectaction'"
+						>
+
+							<span
+								class="choice"
+								:class="{selected : selectedAction == 'mark-resolved'}"
+								@click="switchAction('mark-resolved')"
+							>
+								<p class="title">Mark as Resolved</p>
+								<p class="desctription">Mark this event as resolved and enter the details of the resolution.</p>
+							</span>
+
+							<span
+								class="choice"
+								:class="{selected : selectedAction == 'change-asset'}"
+								@click="switchAction('change-asset')"
+							>
+								<p class="title">Change Asset</p>
+								<p class="desctription">Change the asset with another one.</p>
+							</span>
+
+							<div class="nav text-center">
+								<button
+									class="green"
+									@click="switchActionTab('takeaction')"
+									:disabled="selectedAction == null"
+								>Next</button>
+							</div>
+
+						</div>
+
+						<div
+							class="tab-content takeaction"
+							v-if="activeActionTab == 'takeaction'"
+						>
+
+							<div
+								class="choice-info"
+								v-if="selectedAction == 'mark-resolved'"
+							>
+								<p class="title">Mark as Resolved</p>
+								<p class="desctription">Mark this event as resolved and enter the details of the resolution.</p>
+							</div>
+
+							<div
+								class="choice-info"
+								v-if="selectedAction == 'change-asset'"
+							>
+								<p class="title">Change Asset</p>
+								<p class="desctription">Change the asset with another one.</p>
+							</div>
+
+							<div class="resolution-detail">
+								<label for="resolution-detail">Resolution Detail*</label>
+								<textarea
+									id="resolution-detail"
+									placeholder="Enter resolution detail…"
+									v-model="resolutionDetail"
+									:maxlength="maxChar"
+								></textarea>
+								<div class="char-count">({{ currentChar }}/{{ maxChar }})</div>
+							</div>
+
+							<div class="nav text-center">
+								<button @click="switchActionTab('selectaction')">Back</button>
+								<button
+									class="green"
+									@click="openPopup('loading')"
+								>Take Action</button>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+			<div
+				class="popup loading"
+				v-if="activePopup == 'loading'"
+			>
+
+				<span
+					class="close-button"
+					@click="closePopups()"
+				>
+					<img
+						src="/times.svg"
+						alt=""
+					>
+				</span>
+
+				<div class="popup-content">
+
+					<img
+						src="/loading.svg"
+						alt="Loading"
+						class="spin"
+					>
+
+				</div>
+
+			</div>
+
+			<div
+				class="popup action-result success"
+				v-if="activePopup == 'action-taken'"
+			>
+
+				<span
+					class="close-button"
+					@click="closePopups()"
+				>
+					<img
+						src="/times.svg"
+						alt=""
+					>
+				</span>
+
+				<div class="popup-content text-center">
+
+					<img
+						src="/check.svg"
+						alt=""
+					>
+					<div class="title">ACTION HAS BEEN TAKEN!</div>
+					<p class="description">You can see the action details from details tab.</p>
+
+				</div>
+
+			</div>
+
+			<div
+				class="popup action-result error"
+				v-if="activePopup == 'action-error'"
+			>
+
+				<span
+					class="close-button"
+					@click="closePopups()"
+				>
+					<img
+						src="/times.svg"
+						alt=""
+					>
+				</span>
+
+				<div class="popup-content text-center">
+
+					<img
+						src="/cross.svg"
+						alt=""
+					>
+					<div class="title">A PROBLEM OCCURED!</div>
+					<p class="description">We cannot continue due to a problem. <br> Please try again later.</p>
+
+				</div>
+
+			</div>
+
+		</div>
+
 	</div>
 </template>
 
@@ -180,6 +380,11 @@
 				events: example_response.data,
 				selectedID: null,
 				activeTab: "details",
+				activePopup: null,
+				activeActionTab: "selectaction",
+				selectedAction: null,
+				maxChar: 300,
+				resolutionDetail: "",
 				customIcon: L.icon({
 					iconUrl: '/marker.svg',
 					iconSize: [40, 40],
@@ -197,6 +402,9 @@
 			},
 			selectedEvent() {
 				return this.events.find(event => event.id == this.selectedEventID);
+			},
+			currentChar() {
+				return this.resolutionDetail.length;
 			}
 		},
 		methods: {
@@ -216,6 +424,12 @@
 			},
 			switchTab(tabName) {
 				this.activeTab = tabName;
+			},
+			switchActionTab(tabName) {
+				this.activeActionTab = tabName;
+			},
+			switchAction(action) {
+				this.selectedAction = action;
 			},
 			editAction(eventID, newValue) {
 
@@ -237,6 +451,25 @@
 				this.events[theEventIndex].details[actionColumnIndex].value = newValue;
 
 			},
+			openPopup(popupName) {
+				this.activePopup = popupName;
+
+				if (popupName == 'loading') {
+
+					setTimeout(() => {
+
+						this.openPopup(this.currentChar > 0 ? 'action-taken' : 'action-error');
+
+					}, 1000);
+
+				}
+			},
+			closePopups() {
+				this.activePopup = null;
+				this.selectedAction = null;
+				this.activeActionTab = "selectaction";
+				this.resolutionDetail = "";
+			}
 		},
 	}
 </script>
@@ -257,14 +490,14 @@
 			& > .scrollable {
 				overflow: auto;
 			}
-		}
 
-		.topbar {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding-top: 20px;
-			padding-bottom: 10px;
+			.topbar {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding-top: 20px;
+				padding-bottom: 10px;
+			}
 		}
 
 		.events-list {
@@ -339,6 +572,139 @@
 							}
 						}
 					}
+				}
+			}
+		}
+
+		#popups {
+			position: fixed;
+			z-index: 1000;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: transparentize($dark-blue, 0.3);
+
+			& > .popup {
+				width: 50vw;
+				min-height: 330px;
+				background-color: $white;
+				border-radius: 12px;
+				padding: 40px;
+				position: relative;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.close-button {
+					position: absolute;
+					right: 20px;
+					top: 15px;
+					cursor: pointer;
+
+					&:hover {
+						opacity: 0.7;
+					}
+				}
+
+				.tab-titles {
+					justify-content: center;
+					gap: 60px;
+
+					.number {
+						color: $white;
+						background-color: $dark-blue;
+						width: 19px;
+						height: 19px;
+						border-radius: 50%;
+						display: inline-flex;
+						justify-content: center;
+						align-items: center;
+						font-size: 12px;
+					}
+				}
+
+				.choice {
+					display: block;
+					margin-top: 12px;
+					padding: 12px 18px;
+					background-color: $gray;
+					box-shadow: 0px 3px 6px #00000029;
+					font-size: 16px;
+					user-select: none;
+					cursor: pointer;
+
+					.title {
+						font-weight: bold;
+					}
+
+					&:hover {
+						opacity: 0.8;
+					}
+
+					&.selected {
+						background-color: #454f63;
+						color: white;
+						opacity: 1;
+					}
+				}
+
+				.choice-info {
+					font-size: 16px;
+
+					.title {
+						font-weight: bold;
+					}
+				}
+
+				.resolution-detail {
+					margin-top: 20px;
+					position: relative;
+
+					label {
+						display: block;
+						font-weight: bold;
+						margin-bottom: 3px;
+					}
+
+					textarea {
+						resize: none;
+					}
+
+					.char-count {
+						position: absolute;
+						right: 10px;
+						bottom: 10px;
+					}
+				}
+
+				&.action-result {
+					.title {
+						font-size: 29px;
+						font-weight: 700;
+						margin-top: 10px;
+						margin-bottom: 10px;
+					}
+
+					.description {
+						font-size: 16px;
+					}
+
+					&.success .title {
+						color: $green;
+					}
+
+					&.error .title {
+						color: $red;
+					}
+				}
+
+				.nav {
+					margin-top: 30px;
+					margin-bottom: -10px;
 				}
 			}
 		}
