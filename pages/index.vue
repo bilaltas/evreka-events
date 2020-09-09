@@ -5,7 +5,7 @@
 
 			<div class="topbar">
 
-				<h1 class="title">Events {{ eventsCount }}</h1>
+				<h1 class="title">Events</h1>
 				<div class="actions">
 
 					<label>
@@ -273,7 +273,7 @@
 
 							<div
 								class="choice-info"
-								v-if="selectedAction == 'mark-resolved'"
+								v-if="selectedAction == 'Resolved'"
 							>
 								<p class="title">Mark as Resolved</p>
 								<p class="desctription">Mark this event as resolved and enter the details of the resolution.</p>
@@ -281,7 +281,7 @@
 
 							<div
 								class="choice-info"
-								v-if="selectedAction == 'change-asset'"
+								v-if="selectedAction == 'Change Asset'"
 							>
 								<p class="title">Change Asset</p>
 								<p class="desctription">Change the asset with another one.</p>
