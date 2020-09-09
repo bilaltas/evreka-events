@@ -4,7 +4,7 @@
 // Global Styles
 html {
 	font-family: 'Open Sans', sans-serif;
-	font-size: 19px;
+	font-size: 14px;
 	line-height: normal;
 	font-weight: 300;
 	color: $dark-blue;
@@ -20,6 +20,11 @@ html {
 
 a {
 	color: inherit;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
 }
 
 
@@ -44,7 +49,7 @@ h3 {
 }
 
 
-// Global Components
+// Buttons
 button {
 	display: inline-flex;
 	justify-content: center;
@@ -72,4 +77,42 @@ button {
 	&.full {
 		width: 100%;
 	}
+}
+
+
+// Tabs
+.tabs {
+	margin-top: 25px;
+
+	& > .tab-titles {
+		display: flex;
+		gap: 30px;
+		border-bottom: 2px solid $dark-gray;
+
+		& > * {
+			font-size: 16px;
+			font-weight: 700;
+			text-transform: uppercase;
+			text-decoration: none;
+			opacity: 0.2;
+			border-bottom: 4px solid transparent;
+			padding: 5px 10px;
+			margin-bottom: -3px;
+			cursor: pointer;
+
+			&:hover {
+				opacity: 0.7;
+			}
+
+			&.active {
+				opacity: 1;
+				border-bottom-color: $green;
+			}
+		}
+	}
+
+	& > .tab-contents {
+		padding-top: 20px;
+	}
+
 }

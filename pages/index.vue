@@ -16,12 +16,12 @@
 				<div class="events">
 					<div
 						class="event"
-						:class="{ selected : index == 1 }"
-						v-for="(event, index) in events"
+						:class="{ selected : event.id == selectedEventID }"
+						v-for="event in events"
 						:key="event.id"
+						@click="selectRow(event.id)"
 					>
 						<span class="column date">
-							<!-- {{ event.details[0].value }} -->
 							<p class="title">Date</p>
 							<p class="value">{{ formatDate( getColumnValue('Tarih', event) ) }}</p>
 						</span>
@@ -59,6 +59,86 @@
 						<button>No Action Needed</button>
 						<button class="green">Take Action</button>
 					</div>
+					<div class="tabs">
+						<div class="tab-titles">
+							<span
+								:class="{active: activeTab == 'details'}"
+								@click="switchTab('details')"
+							>Details</span>
+							<span
+								:class="{active: activeTab == 'location'}"
+								@click="switchTab('location')"
+							>Location</span>
+							<span
+								:class="{active: activeTab == 'media'}"
+								@click="switchTab('media')"
+							>Media</span>
+						</div>
+						<div class="tab-contents">
+
+							<div
+								class="tab-content details"
+								v-if="activeTab == 'details'"
+							>
+
+								<span
+									class="detail"
+									v-for="detail in selectedEvent.details"
+									:key="detail.title"
+								>
+									<p class="title">{{ detail.title }}</p>
+									<p class="value">{{ detail.title == "Tarih" ? formatDate(detail.value) : detail.value }}</p>
+								</span>
+
+								<p v-if="!selectedEvent.details.length">No details provided.</p>
+
+							</div>
+
+							<div
+								class="tab-content location"
+								v-if="activeTab == 'location'"
+							>
+
+								{{selectedEvent.location}}
+								<p v-if="selectedEvent.location == {}">There is no map information.</p>
+
+							</div>
+
+							<div
+								class="tab-content media"
+								v-if="activeTab == 'media'"
+							>
+
+								<span
+									class="media"
+									v-for="media in selectedEvent.media"
+									:key="media.url"
+								>
+
+									<video
+										:src="media.url"
+										v-if="media.type == 'video'"
+										controls
+									></video>
+									<audio
+										:src="media.url"
+										v-if="media.type == 'audio'"
+										controls
+									></audio>
+									<img
+										:src="media.url"
+										v-if="media.type == 'image'"
+									>
+									<!-- TODO: Add full screen popup button for images -->
+								</span>
+
+								<p v-if="!selectedEvent.media.length">No Media Content.</p>
+
+							</div>
+
+						</div>
+					</div>
+
 				</div>
 			</div>
 
@@ -72,7 +152,20 @@
 	export default {
 		data() {
 			return {
-				events: example_response.data
+				events: example_response.data,
+				selectedID: null,
+				activeTab: "details"
+			}
+		},
+		computed: {
+			selectedEventID() {
+				if (this.selectedID == null && this.events.length)
+					return this.events[0].id;
+
+				return this.selectedID;
+			},
+			selectedEvent() {
+				return this.events.find(event => event.id == this.selectedEventID);
 			}
 		},
 		methods: {
@@ -86,6 +179,12 @@
 			},
 			getColumnValue(colName, data) {
 				return data.details.find(col => col.title == colName).value;
+			},
+			selectRow(eventID) {
+				this.selectedID = eventID;
+			},
+			switchTab(tabName) {
+				this.activeTab = tabName;
 			}
 		},
 	}
@@ -130,6 +229,7 @@
 				.event {
 					background-color: $white;
 					border-left: 9px solid $yellow;
+					border-right: 5px solid white;
 					padding: 5px 10px 0;
 					box-shadow: 0px 3px 6px #00000014;
 					min-height: 70px;
@@ -147,6 +247,7 @@
 					&.selected {
 						opacity: 1;
 						background-color: #fbf5d7; // 0.2 opacity of $yellow - transparentize($yellow, 0.8) not working because the background is not white
+						border-right-color: #e7e2c6;
 					}
 
 					& > .column {
@@ -172,6 +273,20 @@
 					display: grid;
 					grid-template-columns: 1fr 1fr;
 					gap: 7px;
+				}
+
+				.tabs {
+					.details {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						gap: 20px;
+
+						& > .detail {
+							.title {
+								font-weight: 700;
+							}
+						}
+					}
 				}
 			}
 		}
