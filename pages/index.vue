@@ -176,11 +176,20 @@
 										v-if="media.type == 'audio'"
 										controls
 									></audio>
-									<img
-										:src="media.url"
-										v-if="media.type == 'image'"
-									>
-									<!-- TODO: Add full screen popup button for images -->
+									<figure v-if="media.type == 'image'">
+										<img :src="media.url">
+										<span
+											class="image-button"
+											@click="openPopup('photo')"
+										>
+											<img
+												src="/full-size.svg"
+												width="23"
+												height="22"
+												alt=""
+											>
+										</span>
+									</figure>
 								</span>
 
 								<p v-if="!selectedEvent.media.length">No Media Content.</p>
@@ -387,6 +396,31 @@
 
 			</div>
 
+			<div
+				class="popup photo"
+				v-if="activePopup == 'photo'"
+			>
+
+				<figure>
+
+					<img
+						:src="selectedEvent.media[0].url"
+						alt=""
+					>
+					<span
+						class="image-button"
+						@click="closePopups()"
+					>
+						<img
+							src="/exit-full-screen.svg"
+							alt=""
+						>
+					</span>
+
+				</figure>
+
+			</div>
+
 		</div>
 
 	</div>
@@ -403,12 +437,14 @@
 			return {
 				events: example_response.data,
 				selectedID: null,
+
 				activeTab: "details",
 				activePopup: null,
 				activeActionTab: "selectaction",
 				selectedAction: null,
-				maxChar: 300,
 				resolutionDetail: "",
+
+				maxChar: 300,
 				customIcon: L.icon({
 					iconUrl: '/marker.svg',
 					iconSize: [40, 40],
@@ -629,6 +665,8 @@
 			& > .popup {
 				width: 50vw;
 				min-height: 330px;
+				max-height: 95vh;
+				overflow: auto;
 				background-color: $white;
 				border-radius: 12px;
 				padding: 40px;
@@ -716,6 +754,21 @@
 						position: absolute;
 						right: 10px;
 						bottom: 10px;
+					}
+				}
+
+				&.photo {
+					border-radius: 0;
+					width: auto;
+					min-width: auto;
+					max-width: 100vw;
+					height: auto;
+					min-height: auto;
+					padding: 10px;
+
+					img {
+						display: block;
+						max-width: auto;
 					}
 				}
 

@@ -22,6 +22,22 @@ a {
 	color: inherit;
 }
 
+figure {
+	display: inline-block;
+	position: relative;
+
+	.image-button {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		cursor: pointer;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+}
+
 img {
 	max-width: 100%;
 	height: auto;
