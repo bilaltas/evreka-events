@@ -5,15 +5,8 @@
 
 			<div class="topbar">
 
-				<h1 class="title">Events</h1>
+				<h1 class="title">Events {{ eventsCount }}</h1>
 				<div class="actions">
-					<label>
-						Sort by <br>
-						<select>
-							<option value="default">Default</option>
-							<option value="date">Date</option>
-						</select>
-					</label>
 
 					<label>
 						Order by <br>
@@ -24,10 +17,14 @@
 					</label>
 
 					<label>
-						Category <br>
-						<select>
-							<option value="default">All</option>
-							<option value="default">Category</option>
+						Category filter<br>
+						<select v-model="categoryFilter">
+							<option value="all">All</option>
+							<option
+								:value="cat"
+								v-for="(cat, index) in allCategories"
+								:key="index"
+							>{{ cat }}</option>
 						</select>
 					</label>
 				</div>
@@ -72,7 +69,10 @@
 
 		</div>
 
-		<div class="event-details">
+		<div
+			class="event-details"
+			v-if="selectedEvent"
+		>
 
 			<div class="topbar">
 
@@ -435,7 +435,7 @@
 	export default {
 		data() {
 			return {
-				events: example_response.data,
+				getEvents: example_response.data,
 				selectedID: null,
 
 				activeTab: "details",
@@ -443,6 +443,9 @@
 				activeActionTab: "selectaction",
 				selectedAction: null,
 				resolutionDetail: "",
+
+				sortBy: "default",
+				categoryFilter: "all",
 
 				maxChar: 300,
 				customIcon: L.icon({
@@ -454,11 +457,58 @@
 			}
 		},
 		computed: {
-			selectedEventID() {
-				if (this.selectedID == null && this.events.length)
-					return this.events[0].id;
+			events() {
 
-				return this.selectedID;
+				let events = this.getEvents;
+
+				// Category Filter
+				if (this.categoryFilter != "all") {
+
+					// events = events.filter(event => {
+
+					// 	let details = event.details;
+					// 	let catCol = details.find(col => col.title == "Kategori");
+					// 	console.log(catCol);
+
+					// 	return catCol.value == this.categoryFilter;
+					// });
+
+					events = events.filter(event => {
+
+						return event.details.find(col => col.title == "Kategori").value == this.categoryFilter;
+
+					});
+
+				}
+
+				return events;
+			},
+			eventsCount() {
+				return this.events.length;
+			},
+			allCategories() {
+				let categories = [];
+
+				this.getEvents.forEach(event => {
+
+					categories.push(
+						event.details.find(col => col.title == "Kategori").value
+					);
+
+				});
+
+				let uniqueCats = [...new Set(categories)];
+				return uniqueCats;
+			},
+			selectedEventID() {
+
+				let ID = this.selectedID;
+
+				if (this.events.length) ID = this.events[0].id;
+				if (this.selectedID != null && this.events.find(event => event.id == this.selectedID)) ID = this.selectedID;
+				if (!this.events.length) ID = null;
+
+				return ID;
 			},
 			selectedEvent() {
 				return this.events.find(event => event.id == this.selectedEventID);
@@ -565,6 +615,8 @@
 				.actions {
 					display: flex;
 					gap: 20px;
+					font-size: 12px;
+					padding-right: 10px;
 				}
 			}
 		}
@@ -587,7 +639,7 @@
 					box-shadow: 0px 3px 6px #00000014;
 					min-height: 70px;
 					display: grid;
-					grid-template-columns: 120px 1fr 90px 1fr 1fr;
+					grid-template-columns: 120px repeat(4, 1fr);
 					gap: 30px;
 					justify-content: center;
 					align-items: center;
