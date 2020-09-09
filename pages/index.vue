@@ -10,9 +10,9 @@
 
 					<label>
 						Order by <br>
-						<select>
+						<select v-model="sortBy">
 							<option value="default">Default</option>
-							<option value="default">Category</option>
+							<option value="bin-id">Bin ID</option>
 						</select>
 					</label>
 
@@ -464,20 +464,17 @@
 				// Category Filter
 				if (this.categoryFilter != "all") {
 
-					// events = events.filter(event => {
-
-					// 	let details = event.details;
-					// 	let catCol = details.find(col => col.title == "Kategori");
-					// 	console.log(catCol);
-
-					// 	return catCol.value == this.categoryFilter;
-					// });
-
 					events = events.filter(event => {
-
 						return event.details.find(col => col.title == "Kategori").value == this.categoryFilter;
-
 					});
+
+				}
+
+				if (this.sortBy != "default") {
+
+					let sorted = [...events];
+					sorted.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+					events = sorted;
 
 				}
 
