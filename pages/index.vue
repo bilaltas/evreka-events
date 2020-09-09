@@ -55,10 +55,15 @@
 			</div>
 			<div class="scrollable">
 				<div class="details-box">
-					<div class="actions">
-						<button>No Action Needed</button>
+
+					<div
+						class="actions"
+						v-if="getColumnValue('Aksiyon', selectedEvent) != 'Aksiyon Gerekmiyor'"
+					>
+						<button @click="editAction(selectedEvent.id, 'Aksiyon Gerekmiyor')">No Action Needed</button>
 						<button class="green">Take Action</button>
 					</div>
+
 					<div class="tabs">
 						<div class="tab-titles">
 							<span
@@ -203,15 +208,35 @@
 
 				return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + "  " + date.getHours() + ":" + minutes;
 			},
-			getColumnValue(colName, data) {
-				return data.details.find(col => col.title == colName).value;
+			getColumnValue(colName, event) {
+				return event.details.find(col => col.title == colName).value;
 			},
 			selectRow(eventID) {
 				this.selectedID = eventID;
 			},
 			switchTab(tabName) {
 				this.activeTab = tabName;
-			}
+			},
+			editAction(eventID, newValue) {
+
+				//console.log('EDIT ACTION: ', eventID, newValue);
+
+				// Find the event
+				let theEvent = this.events.find(event => event.id == eventID);
+				if (!theEvent) return false;
+				let theEventIndex = this.events.findIndex(event => event.id == eventID);
+				//console.log('Event Found: ', theEvent, theEventIndex);
+
+				// Find the action column
+				let actionColumn = theEvent.details.find(col => col.title == "Aksiyon");
+				if (!actionColumn) return false;
+				let actionColumnIndex = theEvent.details.findIndex(col => col.title == "Aksiyon");
+				//console.log('Action Column: ', actionColumn, actionColumnIndex);
+
+				// Modify
+				this.events[theEventIndex].details[actionColumnIndex].value = newValue;
+
+			},
 		},
 	}
 </script>
@@ -299,6 +324,7 @@
 					display: grid;
 					grid-template-columns: 1fr 1fr;
 					gap: 7px;
+					margin-bottom: 25px;
 				}
 
 				.tabs {
