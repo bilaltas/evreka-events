@@ -108,8 +108,11 @@
 											:zoom=18
 											:center="[selectedEvent.location.latitude, selectedEvent.location.longitude]"
 										>
-											<l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png">ASD</l-tile-layer>
-											<l-marker :lat-lng="[selectedEvent.location.latitude, selectedEvent.location.longitude]"></l-marker>
+											<l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+											<l-marker
+												:lat-lng="[selectedEvent.location.latitude, selectedEvent.location.longitude]"
+												:icon="customIcon"
+											></l-marker>
 										</l-map>
 									</client-only>
 								</div>
@@ -163,12 +166,21 @@
 <script>
 	import { example_response } from "~/static/example_response_js_file.txt";
 
+	let L = { icon() { } };
+	if (process.browser) L = require('leaflet');
+
 	export default {
 		data() {
 			return {
 				events: example_response.data,
 				selectedID: null,
-				activeTab: "details"
+				activeTab: "details",
+				customIcon: L.icon({
+					iconUrl: '/marker.svg',
+					iconSize: [40, 40],
+					iconAnchor: [21, 35],
+					popupAnchor: [-3, -76]
+				})
 			}
 		},
 		computed: {
