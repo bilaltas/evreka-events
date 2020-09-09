@@ -6,10 +6,31 @@
 			<div class="topbar">
 
 				<h1 class="title">Events</h1>
-				<div
-					class="actions"
-					style="display: none"
-				>Sort & Filter</div>
+				<div class="actions">
+					<label>
+						Sort by <br>
+						<select>
+							<option value="default">Default</option>
+							<option value="date">Date</option>
+						</select>
+					</label>
+
+					<label>
+						Order by <br>
+						<select>
+							<option value="default">Default</option>
+							<option value="default">Category</option>
+						</select>
+					</label>
+
+					<label>
+						Category <br>
+						<select>
+							<option value="default">All</option>
+							<option value="default">Category</option>
+						</select>
+					</label>
+				</div>
 
 			</div>
 
@@ -17,7 +38,10 @@
 				<div class="events">
 					<div
 						class="event"
-						:class="{ selected : event.id == selectedEventID }"
+						:class="{
+							selected : event.id == selectedEventID,
+							actionexist: getColumnValue('Aksiyon', event) == 'Aksiyon Gerekmiyor' || (getColumnValue('Aksiyon', event) != '-' && getColumnValue('Aksiyon', event) != 'Aksiyon Gerekmiyor')
+						}"
 						v-for="event in events"
 						:key="event.id"
 						@click="selectRow(event.id)"
@@ -501,6 +525,11 @@
 				align-items: center;
 				padding-top: 20px;
 				padding-bottom: 10px;
+
+				.actions {
+					display: flex;
+					gap: 20px;
+				}
 			}
 		}
 
@@ -532,9 +561,14 @@
 						opacity: 0.7;
 					}
 
+					&.actionexist {
+						border-left-color: $white;
+					}
+
 					&.selected {
 						opacity: 1;
 						background-color: #fbf5d7; // 0.2 opacity of $yellow - transparentize($yellow, 0.8) not working because the background is not white
+						border-left-color: $yellow;
 						border-right-color: #e7e2c6;
 					}
 
