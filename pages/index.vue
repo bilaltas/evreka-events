@@ -470,7 +470,8 @@
 
 				}
 
-				if (this.sortBy != "default") {
+				// Order by Bin ID
+				if (this.sortBy == "bin-id") {
 
 					let sorted = [...events];
 					sorted.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
@@ -588,15 +589,22 @@
 <style lang="scss">
 	.events-wrapper {
 		display: grid;
-		grid-template-columns: 855px 1fr;
+		grid-template-columns: minmax(100px, 850px) minmax(355px, 1fr);
 		gap: 10px;
 		height: inherit;
+
+		@media (max-width: $second-breakpoint) {
+			display: block;
+			grid-template-columns: none;
+			height: auto;
+		}
 
 		& > * {
 			display: grid;
 			grid-template-columns: 1fr;
 			grid-template-rows: 75px minmax(0, 1fr);
 			height: inherit;
+			background-color: $gray;
 
 			& > .scrollable {
 				overflow: auto;
@@ -609,20 +617,24 @@
 				padding-top: 20px;
 				padding-bottom: 10px;
 
+				.title {
+					margin-left: 18px;
+				}
+
 				.actions {
-					display: flex;
-					gap: 20px;
-					font-size: 12px;
-					padding-right: 10px;
+					display: none;
+
+					@media (min-width: $first-breakpoint) {
+						display: flex;
+						gap: 20px;
+						font-size: 12px;
+						padding-right: 10px;
+					}
 				}
 			}
 		}
 
 		.events-list {
-			.title {
-				margin-left: 18px;
-			}
-
 			.events {
 				display: grid;
 				grid-template-columns: 1fr;
@@ -712,7 +724,7 @@
 			background-color: transparentize($dark-blue, 0.3);
 
 			& > .popup {
-				width: 50vw;
+				width: 90vw;
 				min-height: 330px;
 				max-height: 95vh;
 				overflow: auto;
@@ -723,6 +735,10 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
+
+				@media (min-width: $first-breakpoint) {
+					width: 50vw;
+				}
 
 				.close-button {
 					position: absolute;
@@ -737,7 +753,11 @@
 
 				.tab-titles {
 					justify-content: center;
-					gap: 60px;
+					gap: 20px;
+
+					@media (min-width: $first-breakpoint) {
+						gap: 50px;
+					}
 
 					.number {
 						color: $white;

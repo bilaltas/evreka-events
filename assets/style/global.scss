@@ -76,11 +76,16 @@ button {
 	box-shadow: 0px 3px 6px #00000029;
 	background-color: $dark-gray;
 	color: $white;
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: 700;
 	text-transform: uppercase;
-	padding: 7px 35px;
+	padding: 7px 15px;
 	cursor: pointer;
+
+	@media (min-width: $first-breakpoint) {
+		font-size: 16px;
+		padding: 7px 30px;
+	}
 
 	&:hover {
 		opacity: 0.8;
