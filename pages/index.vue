@@ -142,7 +142,7 @@
 											:zoom=18
 											:center="[selectedEvent.location.latitude, selectedEvent.location.longitude]"
 										>
-											<l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+											<l-tile-layer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
 											<l-marker
 												:lat-lng="[selectedEvent.location.latitude, selectedEvent.location.longitude]"
 												:icon="customIcon"
@@ -449,7 +449,7 @@
 
 				maxChar: 300,
 				customIcon: L.icon({
-					iconUrl: '/marker.svg',
+					iconUrl: '/evreka/marker.svg',
 					iconSize: [40, 40],
 					iconAnchor: [21, 35],
 					popupAnchor: [-3, -76]
