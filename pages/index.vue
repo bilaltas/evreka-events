@@ -183,7 +183,7 @@
 											@click="openPopup('photo')"
 										>
 											<img
-												src="/full-size.svg"
+												src="/evreka/full-size.svg"
 												width="23"
 												height="22"
 												alt=""
@@ -218,7 +218,7 @@
 					@click="closePopups()"
 				>
 					<img
-						src="/times.svg"
+						src="/evreka/times.svg"
 						alt=""
 					>
 				</span>
@@ -323,7 +323,7 @@
 					@click="closePopups()"
 				>
 					<img
-						src="/times.svg"
+						src="/evreka/times.svg"
 						alt=""
 					>
 				</span>
@@ -331,7 +331,7 @@
 				<div class="popup-content">
 
 					<img
-						src="/loading.svg"
+						src="/evreka/loading.svg"
 						alt="Loading"
 						class="spin"
 					>
@@ -350,7 +350,7 @@
 					@click="closePopups()"
 				>
 					<img
-						src="/times.svg"
+						src="/evreka/times.svg"
 						alt=""
 					>
 				</span>
@@ -358,7 +358,7 @@
 				<div class="popup-content text-center">
 
 					<img
-						src="/check.svg"
+						src="/evreka/check.svg"
 						alt=""
 					>
 					<div class="title">ACTION HAS BEEN TAKEN!</div>
@@ -378,7 +378,7 @@
 					@click="closePopups()"
 				>
 					<img
-						src="/times.svg"
+						src="/evreka/times.svg"
 						alt=""
 					>
 				</span>
@@ -386,7 +386,7 @@
 				<div class="popup-content text-center">
 
 					<img
-						src="/cross.svg"
+						src="/evreka/cross.svg"
 						alt=""
 					>
 					<div class="title">A PROBLEM OCCURED!</div>
@@ -412,7 +412,7 @@
 						@click="closePopups()"
 					>
 						<img
-							src="/exit-full-screen.svg"
+							src="/evreka/exit-full-screen.svg"
 							alt=""
 						>
 					</span>
